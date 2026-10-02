@@ -138,6 +138,9 @@ const chunks = [];
 // This keeps chunk data even after the chunk becomes inactive.
 const chunkStore = new Map();
 
+let totalChunksGenerated = 0;
+let totalChunksDeleted = 0;
+
 function seededRandom(seed) {
     const x = Math.sin(seed * 12.9898) * 43758.5453;
 
@@ -236,6 +239,8 @@ function createChunk(chunkIndex) {
 
     chunkStore.set(chunkIndex, chunk);
 
+    totalChunksGenerated++;
+
     return chunk;
 }
 
@@ -301,6 +306,8 @@ function cleanupInactiveChunks() {
             chunks.splice(i, 1);
 
             chunkStore.delete(chunk.index);
+
+            totalChunksDeleted++;
         }
     }
 }
@@ -1497,6 +1504,16 @@ function render() {
         20,
         105
     );
+    ctx.fillText(
+        `Generated: ${totalChunksGenerated}`,
+        20,
+        130
+    );
+    ctx.fillText(
+        `Deleted: ${totalChunksDeleted}`,
+        20,
+        155
+    );
     if (performance.memory) {
         const memoryMB =
             performance.memory.usedJSHeapSize / 1024 / 1024;
@@ -1504,7 +1521,7 @@ function render() {
         ctx.fillText(
             `JS Heap: ${memoryMB.toFixed(1)} MB`,
             20,
-            130
+            180
         );
     }
 }
@@ -1532,3 +1549,21 @@ function gameLoop(currentTime) {
 }
 
 requestAnimationFrame(gameLoop);
+
+canvas.addEventListener("touchstart", function (event) {
+    event.preventDefault();
+
+    keys.ArrowRight = true;
+});
+
+canvas.addEventListener("touchend", function (event) {
+    event.preventDefault();
+
+    keys.ArrowRight = false;
+});
+
+canvas.addEventListener("touchcancel", function (event) {
+    event.preventDefault();
+
+    keys.ArrowRight = false;
+});
