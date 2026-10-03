@@ -1567,3 +1567,23 @@ canvas.addEventListener("touchcancel", function (event) {
 
     keys.ArrowRight = false;
 });
+
+const orientationBtn = document.getElementById("orientationBtn");
+
+orientationBtn.addEventListener("click", async () => {
+    try {
+        if (document.documentElement.requestFullscreen) {
+            await document.documentElement.requestFullscreen();
+        }
+
+        if (screen.orientation && screen.orientation.lock) {
+            if (screen.orientation.type.startsWith("portrait")) {
+                await screen.orientation.lock("landscape");
+            } else {
+                await screen.orientation.lock("portrait");
+            }
+        }
+    } catch (error) {
+        console.log("Orientation change not supported:", error);
+    }
+});
