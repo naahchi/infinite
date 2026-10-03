@@ -149,7 +149,11 @@ function seededRandom(seed) {
 
 function getTerrainHeight(worldX) {
 
-    const baseY = 500;
+    // const baseY = 500;
+    const baseY = Math.min(
+        600,
+        canvas.height - ROAD_HEIGHT - 100
+    );
 
     const sampleSize = 300;
 
@@ -1587,3 +1591,4 @@ orientationBtn.addEventListener("click", async () => {
         console.log("Orientation change not supported:", error);
     }
 });
+
